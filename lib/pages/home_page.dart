@@ -1,3 +1,5 @@
+import 'package:daily_quotes/blocs/phrases_bloc.dart';
+import 'package:daily_quotes/widgets/transparent_button.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -7,6 +9,16 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String selectedFont = 'DellaRespira';
+  String selectedPhrase = 'inspirational';
+
+  PhrasesBloc bloc = PhrasesBloc();
+
+  @override
+  void initState() {
+    super.initState();
+    bloc.getPhrases();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +30,7 @@ class _HomePageState extends State<HomePage> {
               Color(0xFF203A43),
               Color(0xFF2C5364),
             ],
-            radius: 1.2,
+            radius: 1.8,
           ),
         ),
         height: double.infinity,
@@ -27,31 +39,39 @@ class _HomePageState extends State<HomePage> {
           children: [
             Align(
               alignment: Alignment.center,
-              child: Padding(
-                padding: EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      '"You must do the thing you think you cannot do."',
-                      style: TextStyle(
-                        fontFamily: selectedFont,
-                        color: Color(0xCCFFFFFF),
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      'Eleanor Roosevelt.',
-                      style: TextStyle(
-                        fontFamily: 'DellaRespira',
-                        color: Color(0xCCFFFFFF),
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              child: StreamBuilder(
+                  stream: bloc.phrasesStream,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Padding(
+                        padding: EdgeInsets.all(24.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              '"${snapshot.data[selectedPhrase].quote}"',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: selectedFont,
+                                color: Color(0xCCFFFFFF),
+                              ),
+                            ),
+                            SizedBox(height: 8),
+                            Text(
+                              '${snapshot.data[selectedPhrase].author}',
+                              style: TextStyle(
+                                fontFamily: selectedFont,
+                                color: Color(0xCCFFFFFF),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    return Container();
+                  }),
             ),
             Align(
               alignment: Alignment.bottomCenter,
@@ -60,77 +80,29 @@ class _HomePageState extends State<HomePage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: InkWell(
-                        onTap: () {
-                          print('Insult');
-                        },
-                        child: Container(
-                          width: 100,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            'Insult',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: selectedFont,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
+                    TransparentButton(
+                      onTap: () {
+                        selectedPhrase = 'insult';
+                        selectedFont = 'BubblerOne';
+                        setState(() {});
+                      },
+                      text: 'Insult',
                     ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: InkWell(
-                        onTap: () {
-                          print('Inspirational');
-                        },
-                        child: Container(
-                          width: 100,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            'Inspirational',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: selectedFont,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
+                    TransparentButton(
+                      onTap: () {
+                        selectedPhrase = 'inspirational';
+                        selectedFont = 'DellaRespira';
+                        setState(() {});
+                      },
+                      text: 'Inspirational',
                     ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: InkWell(
-                        onTap: () {
-                          print('Kanye West');
-                        },
-                        child: Container(
-                          width: 100,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white),
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          padding: EdgeInsets.all(8),
-                          child: Text(
-                            'Kanye West',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: selectedFont,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
+                    TransparentButton(
+                      onTap: () {
+                        selectedPhrase = 'kanye';
+                        selectedFont = 'Metamorphous';
+                        setState(() {});
+                      },
+                      text: 'Kanye West',
                     ),
                   ],
                 ),
