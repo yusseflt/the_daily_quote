@@ -1,0 +1,2 @@
+json_key_file("~/Documents/chaves/the_daily_quote/pc-api-5728201840514327878-246-385a8fde53c2.json") # Path to the json secret file - Follow https://docs.fastlane.tools/actions/supply/#setup to get one
+package_name("com.yusseftoutenge.daily_quotes") # e.g. com.krausefx.app
