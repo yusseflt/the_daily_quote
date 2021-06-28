@@ -1,0 +1,42 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Description of what the lane does"
+  lane :test do
+    Dir.chdir "../.." do
+      sh("flutter", "test")
+    end
+  end
+
+  lane :upload_staging do
+    build_app(
+      workspace: "Runner.xcworkspace",
+      configuration: "Debug",
+      scheme: "Runner",
+      silent: true,
+      clean: true,
+      output_directory: "path/to/dir", # Destination directory. Defaults to current directory.
+      output_name: "myapp.ipa",    # use SDK as the name or path of the base SDK when building the project.
+    )
+            
+    diawi(
+      token: ""
+    )
+  end
+
+end
